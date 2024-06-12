@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -17,8 +17,8 @@ def load_data():
 data = load_data()
 
 # Display the dataset
-st.write("## Housing Dataset")
-st.write(data.head())
+st.write("# 🏠 Welcome to House Price Predictor App 📈")
+st.write("## Discover the Magic of Predicting House Prices!")
 
 # Preprocess the data
 data = data.dropna(subset=['total_bedrooms'])  # Drop rows with missing values
@@ -46,11 +46,13 @@ y_pred = model.predict(X_test)
 # Evaluate the model
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
 
 # Display the evaluation metrics
 st.write("## Model Performance")
-st.write(f"Mean Squared Error: {mse}")
-st.write(f"Root Mean Squared Error: {rmse}")
+st.write(f"Mean Squared Error: {mse:.2f}%")
+st.write(f"Root Mean Squared Error: {rmse:.2f}%")
+st.write(f"R^2 score:{r2:.2f}%") 
 
 # Plot predictions vs actual values
 fig, ax = plt.subplots()
@@ -63,15 +65,17 @@ st.pyplot(fig)
 
 # User input for new prediction
 st.write("## Predict New House Price")
-st.write("### Enter the details of the house:")
-longitude = st.number_input("Longitude", value=data["longitude"].mean())
-latitude = st.number_input("Latitude", value=data["latitude"].mean())
-housing_median_age = st.number_input("Housing Median Age", value=data["housing_median_age"].mean())
-total_rooms = st.number_input("Total Rooms", value=data["total_rooms"].mean())
-total_bedrooms = st.number_input("Total Bedrooms", value=data["total_bedrooms"].mean())
-population = st.number_input("Population", value=data["population"].mean())
-households = st.number_input("Households", value=data["households"].mean())
-median_income = st.number_input("Median Income", value=data["median_income"].mean())
+st.write("### 🏡 Adjust the sliders to enter the details of the house:")
+
+# Slider widgets for user input
+longitude = st.slider("Longitude", float(data["longitude"].min()), float(data["longitude"].max()), float(data["longitude"].mean()))
+latitude = st.slider("Latitude", float(data["latitude"].min()), float(data["latitude"].max()), float(data["latitude"].mean()))
+housing_median_age = st.slider("Housing Median Age", float(data["housing_median_age"].min()), float(data["housing_median_age"].max()), float(data["housing_median_age"].mean()))
+total_rooms = st.slider("Total Rooms", float(data["total_rooms"].min()), float(data["total_rooms"].max()), float(data["total_rooms"].mean()))
+total_bedrooms = st.slider("Total Bedrooms", float(data["total_bedrooms"].min()), float(data["total_bedrooms"].max()), float(data["total_bedrooms"].mean()))
+population = st.slider("Population", float(data["population"].min()), float(data["population"].max()), float(data["population"].mean()))
+households = st.slider("Households", float(data["households"].min()), float(data["households"].max()), float(data["households"].mean()))
+median_income = st.slider("Median Income", float(data["median_income"].min()), float(data["median_income"].max()), float(data["median_income"].mean()))
 
 # Handle one-hot encoding for the user input
 ocean_proximity = st.selectbox("Ocean Proximity", ocean_proximity_values)
